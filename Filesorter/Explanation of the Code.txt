@@ -5,7 +5,7 @@ os: This module provides functions for interacting with the operating system, su
 shutil: This module offers a number of high-level operations on files and collections of files, such as copying and moving files.
 Setting the Path:
 
-The variable path holds the directory path where your files are located. In this case, it's set to 'C:/Users/HP/OneDrive/Pictures/'.
+The variable path holds the directory path where your files are located. In this case, it's set to 'C:path//'.
 You can change this path to point to any directory you want to organize.
 Listing Files and Directories:
 
