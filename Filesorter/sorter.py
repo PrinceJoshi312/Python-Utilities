@@ -2,12 +2,12 @@ import os         # Import the os module for interacting with the operating syst
 import shutil     # Import the shutil module for high-level file operations like copying and moving files
 
 # Set the path to the directory containing the files you want to organize
-path = r'C:/Users/HP/OneDrive/Pictures/'
+path = r'' # your Directory path here ''
 
 # Get a list of all files and directories in the specified path
 file_names = os.listdir(path)
 
-# Define the names of folders for categorizing different file types
+# Define the names of folders for categorizing different file types, you can add more folder names according to your needs
 folder_names = ['video_files', 'excel_files', 'csv_files', 'image_files', 'text_files', 'pdf_files', 'docx_files', 'powerbi_files', 'pptx_files']
 
 # Create the folders for each file type if they don't already exist
