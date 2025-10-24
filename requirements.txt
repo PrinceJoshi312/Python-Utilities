@@ -1,2 +1,0 @@
-yt-dlp
-ffmpeg-python  # optional; yt-dlp still needs ffmpeg installed system-wide
