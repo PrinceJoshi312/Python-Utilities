@@ -1,4 +1,4 @@
-### **Usage**
+# Usage
 
 1. Install dependencies:
 
@@ -29,7 +29,7 @@ Enter output filename (optional, default=derived from URL):
 
 ---
 
-1️⃣ Install wkhtmltopdf
+Install wkhtmltopdf
 Windows
 
 Download the installer: https://wkhtmltopdf.org/downloads.html
@@ -64,6 +64,7 @@ import pdfkit
 
 config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 pdfkit.from_url("https://example.com", "output.pdf", configuration=config)
+
 
 
 Replace the path with your actual wkhtmltopdf.exe location.
