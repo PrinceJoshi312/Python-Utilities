@@ -1,12 +1,12 @@
 import subprocess
 import os
 
-VIDEO_URL = "https://www.youtube.com/shorts/SBlJGQc-cUg"
+VIDEO_URL = "YOUR_PATH_HERE"
 
-DOWNLOAD_DIR = r"C:\Users\HP\OneDrive\Desktop\websearch\downloads"
+DOWNLOAD_DIR = r"YOUR_DOWNLOAD_FOLDER_PATH_HERE"
 
 FFMPEG_PATH = (
-    r"C:\Users\HP\OneDrive\Pictures\ffmpeg-8.0.1-essentials_build"
+    r"YOUR_FFMPEG_PATH_HERE\ffmpeg-8.0.1-essentials_buil"
     r"\ffmpeg-8.0.1-essentials_build\bin"
 )
 
