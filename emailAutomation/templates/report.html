@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .header { background: #4a90e2; color: white; padding: 15px; border-radius: 6px 6px 0 0; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .score-box { background: white; padding: 15px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .score-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; }
+        .score-row:last-child { border-bottom: none; }
+        .footer { text-align: center; margin-top: 20px; font-size: 0.85em; color: #777; }
+        .label { font-weight: bold; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Academic Progress Report</h2>
+        </div>
+        <div class="content">
+            <p>Dear <strong>{name}</strong>,</p>
+            <p>Please find your latest examination results below:</p>
+            
+            <div class="score-box">
+                <div class="score-row">
+                    <span class="label">Mathematics:</span>
+                    <span>{maths}</span>
+                </div>
+                <div class="score-row">
+                    <span class="label">Physics:</span>
+                    <span>{physics}</span>
+                </div>
+                <div class="score-row">
+                    <span class="label">Chemistry:</span>
+                    <span>{chemistry}</span>
+                </div>
+                <div class="score-row">
+                    <span class="label">English:</span>
+                    <span>{english}</span>
+                </div>
+            </div>
+
+            <p>If you have any questions regarding these grades, please contact your department advisor.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 Examination Cell | Automated Result Delivery System</p>
+        </div>
+    </div>
+</body>
+</html>
