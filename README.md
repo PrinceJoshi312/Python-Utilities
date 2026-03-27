@@ -1,99 +1,144 @@
-
 # Python Utilities 🐍
 
-Welcome to **Python Utilities** — a collection of handy Python scripts for everyday tasks, automation, and scraping.
+A collection of **practical Python scripts** for automation, scraping, media processing, and productivity.
+Each folder is a **self-contained utility** designed to solve a specific everyday task.
 
-This repository contains:
+---
 
-- **Audio Extractor** 🎵: Download audio from YouTube, Twitter, Instagram, and playlists.
-- **Web Scraper** 🌐: Scrape text and links from websites, fully customizable.
-- **File Sorter** 📂: Organize and sort files in directories automatically.
-- **Other Utilities** 🛠️: Various Python scripts for productivity and automation.
+## 📦 Available Utilities
 
+| Folder            | Description                                |
+| ----------------- | ------------------------------------------ |
+| `Filesorter`      | Automatically organizes files by type      |
+| `audio_extractor` | Extract audio from videos (YouTube & more) |
+| `emailAutomation` | Automate email sending workflows           |
+| `url_extractor`   | Extract URLs from text or web content      |
+| `url_to_img`      | Convert webpage/URL into image             |
+| `url_to_video`    | Download videos using yt-dlp + ffmpeg      |
+| `web_scraper`     | Scrape content from websites               |
+| `webpage_to_pdf`  | Convert webpages to PDF                    |
+| `websearch`       | Simple web search automation tool          |
+
+---
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Python 3.8 or higher  
-- Each utility may have its own dependencies listed in `requirements.txt`
+### 1. Clone Repository
 
-### Clone this repository
 ```bash
 git clone https://github.com/PrinceJoshi312/Python-Utilities.git
 cd Python-Utilities
-````
-
----
-
-## 🛠️ Utilities Overview
-
-### 1. Audio Extractor 🎵
-
-Download audio from videos or playlists.
-
-```bash
-cd audio_extractor
-pip install -r requirements.txt
-python extractor.py
 ```
 
-Follow the prompts to:
-
-* Enter video or playlist URL
-* Choose audio format (mp3/wav/m4a)
-* Decide if you want the whole playlist or single video
-
-**Note:** Make sure **FFmpeg** is installed on your system (required by yt-dlp).
-
 ---
 
-### 2. Web Scraper 🌐
+### 2. Navigate to Any Utility
 
-Scrape text or links from any website.
+Each utility runs independently:
 
 ```bash
-cd web_scraper
-pip install -r requirements.txt
-python scraper.py
+cd folder_name
+python script.py
 ```
 
-* Enter the URL
-* Enter the HTML tag to extract (default: `p`)
-* Optionally enter a CSS class to filter elements
-* Extracted content is printed in the console
-
----
-
-### 3. File Sorter 📂
-
-Automatically organize files in a directory by file type.
+Example:
 
 ```bash
-cd file_sorter
-pip install -r requirements.txt
-python sorter.py
+cd url_to_video
+python downloader.py
 ```
 
-* Enter the directory path you want to sort
-* The script will create folders for each file type (Images, Documents, Videos, etc.)
-* Files are moved into their respective folders
+---
+
+## ⚙️ Requirements
+
+* Python 3.8+
+* pip
+* Some utilities require additional dependencies
+* Some utilities require external tools like:
+
+  * **FFmpeg**
+  * **yt-dlp**
+  * Browser drivers (for scraping)
+
+Install dependencies if available:
+
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-## 📦 Contributing
+## 📂 Project Structure
 
-Contributions are welcome!
-
-* Fork the repo
-* Create a feature branch
-* Submit a pull request
+```
+Python-Utilities/
+│
+├── Filesorter/
+├── audio_extractor/
+├── emailAutomation/
+├── url_extractor/
+├── url_to_img/
+├── url_to_video/
+├── web_scraper/
+├── webpage_to_pdf/
+├── websearch/
+└── README.md
+```
 
 ---
 
-## ⚠️ Notes
+## 🧠 Usage Pattern
 
-* Some utilities require external programs (like **FFmpeg** for audio extractor).
-* Ensure system paths are properly set if required.
+Most utilities follow this pattern:
+
+1. Navigate to folder
+2. Configure variables (if required)
+3. Run script
+4. Output generated automatically
+
+---
+
+## ⚠️ Important Notes
+
+* Some scripts require **FFmpeg installed**
+* Windows users should use **raw paths** (`r"C:\path"`)
+* Ensure external tools are either:
+
+  * added to PATH
+  * OR provided directly in script
+
+---
+
+## 🛠️ Purpose
+
+This repository is designed for:
+
+* automation tasks
+* quick utilities
+* scraping workflows
+* media processing
+* productivity scripting
+
+---
+
+## 📈 Future Additions
+
+* CLI wrappers
+* unified launcher
+* shared requirements
+* GUI versions
+
+---
+
+## 🤝 Contributing
+
+Feel free to:
+
+* fork the repo
+* improve scripts
+* add new utilities
+* submit pull requests
 
 ---
 
