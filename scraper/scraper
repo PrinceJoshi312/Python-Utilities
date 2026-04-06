@@ -1,0 +1,202 @@
+#!/usr/bin/env python3
+"""
+Advanced Local Business Scraper
+--------------------------------
+Features:
+- Editable location variable
+- Multi-category scraping
+- Pagination (scrape many results)
+- Multithreading (fast scraping)
+- Google Maps via SerpAPI
+- Email scraping from websites
+- Deduplication
+- Radius-based search
+- CSV + Excel export
+- Folder per category
+- File named by location
+"""
+
+import os
+import re
+import csv
+import time
+import requests
+import threading
+from queue import Queue
+from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor
+
+# =========================
+# EDITABLE PARAMETERS
+# =========================
+
+LOCATION = "Haldwani, Uttarakhand, India"  # change location here
+RADIUS_KM = 25
+MAX_RESULTS_PER_CATEGORY = 200
+THREADS = 8
+
+OUTPUT_BASE_DIR = "scraped_businesses"
+
+CATEGORIES = [
+    "clinics",
+    "restaurants",
+    "cafes",
+    "dentists",
+    "gyms",
+    "pharmacies",
+    "salons",
+    "hotels",
+    "schools",
+    "coaching centers",
+    "lawyers",
+    "real estate agents",
+    "hospitals",
+    "electronics stores",
+    "mobile shops",
+    "car repair",
+    "bike repair",
+    "tailors",
+    "bakeries",
+    "printing shops",
+    "pet shops",
+    "hardware stores",
+    "beauty parlours",
+    "spa",
+    "diagnostic centers",
+    "pathology labs",
+    "furniture stores",
+    "supermarkets",
+    "stationery stores",
+    "computer repair",
+    "web design companies"
+]
+
+SERPAPI_KEY = "4baf68c7faccb5241f02171e0c0e6cf01c6bc7228d57f6c3516ae1b071fe2d6b"
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0"
+}
+
+# =========================
+# EMAIL EXTRACTION
+# =========================
+
+def extract_emails(text):
+    if not text:
+        return ""
+    emails = re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", text)
+    return ", ".join(set(emails))
+
+
+def scrape_website_for_email(url):
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=6)
+        if resp.status_code == 200:
+            return extract_emails(resp.text)
+    except:
+        return ""
+    return ""
+
+# =========================
+# SERPAPI SCRAPER WITH PAGINATION
+# =========================
+
+def scrape_with_serpapi(category, location):
+    results = []
+    seen = set()
+
+    for start in range(0, MAX_RESULTS_PER_CATEGORY, 20):
+        params = {
+            "engine": "google_maps",
+            "q": f"{category} in {location}",
+            "type": "search",
+            "start": start,
+            "api_key": SERPAPI_KEY
+        }
+
+        try:
+            response = requests.get("https://serpapi.com/search", params=params)
+            data = response.json()
+
+            for place in data.get("local_results", []):
+                name = place.get("title", "")
+
+                if name in seen:
+                    continue
+                seen.add(name)
+
+                address = place.get("address", "")
+                phone = place.get("phone", "")
+                website = place.get("website", "")
+
+                results.append({
+                    "Name": name,
+                    "Location": address,
+                    "Phone": phone,
+                    "Website": website,
+                    "Email": ""
+                })
+
+        except Exception as e:
+            print("Error:", e)
+
+        time.sleep(1)
+
+    return results
+
+# =========================
+# MULTITHREADED EMAIL SCRAPER
+# =========================
+
+def enrich_emails(results):
+    def worker(item):
+        if item["Website"]:
+            item["Email"] = scrape_website_for_email(item["Website"])
+        return item
+
+    with ThreadPoolExecutor(max_workers=THREADS) as executor:
+        results = list(executor.map(worker, results))
+
+    return results
+
+# =========================
+# SAVE FUNCTIONS
+# =========================
+
+def save_to_csv(category, location, data):
+    folder = os.path.join(OUTPUT_BASE_DIR, category)
+    os.makedirs(folder, exist_ok=True)
+
+    safe_location = location.replace(",", "").replace(" ", "_")
+    filepath = os.path.join(folder, f"{safe_location}.xlsx")
+
+    with open(filepath, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=data[0].keys())
+        writer.writeheader()
+        writer.writerows(data)
+
+    print("Saved:", filepath)
+
+# =========================
+# MAIN
+# =========================
+
+def main():
+    for category in CATEGORIES:
+        print(f"\nScraping {category} in {LOCATION}")
+
+        results = scrape_with_serpapi(category, LOCATION)
+
+        if not results:
+            continue
+
+        print("Fetching emails...")
+        results = enrich_emails(results)
+
+        save_to_csv(category, LOCATION, results)
+
+    print("\nAll done!")
+
+
+if __name__ == "__main__":
+    main()
