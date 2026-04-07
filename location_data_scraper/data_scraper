@@ -5,32 +5,28 @@ Advanced Local Business Scraper
 Features:
 - Editable location variable
 - Multi-category scraping
-- Pagination (scrape many results)
-- Multithreading (fast scraping)
-- Google Maps via SerpAPI
-- Email scraping from websites
+- Pagination
+- Multithreading
+- Email scraping
 - Deduplication
-- Radius-based search
-- CSV + Excel export
+- XLSX export
 - Folder per category
 - File named by location
 """
 
 import os
 import re
-import csv
 import time
 import requests
-import threading
-from queue import Queue
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
+from openpyxl import Workbook
 
 # =========================
 # EDITABLE PARAMETERS
 # =========================
 
-LOCATION = "Haldwani, Uttarakhand, India"  # change location here
+LOCATION = "Haldwani, Uttarakhand, India"
 RADIUS_KM = 25
 MAX_RESULTS_PER_CATEGORY = 200
 THREADS = 8
@@ -38,9 +34,9 @@ THREADS = 8
 OUTPUT_BASE_DIR = "scraped_businesses"
 
 CATEGORIES = [
-    "clinics",
+    "medical clinics",
     "restaurants",
-    "cafes",
+    "coffee shop",
     "dentists",
     "gyms",
     "pharmacies",
@@ -50,7 +46,6 @@ CATEGORIES = [
     "coaching centers",
     "lawyers",
     "real estate agents",
-    "hospitals",
     "electronics stores",
     "mobile shops",
     "car repair",
@@ -71,11 +66,12 @@ CATEGORIES = [
     "web design companies"
 ]
 
-SERPAPI_KEY = "4baf68c7faccb5241f02171e0c0e6cf01c6bc7228d57f6c3516ae1b071fe2d6b"
+# separate hospital category
+HOSPITAL_CATEGORY = ["hospitals"]
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0"
-}
+SERPAPI_KEY = "YOUR_SERPAPI_KEY_HERE"
+
+HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 # =========================
 # EMAIL EXTRACTION
@@ -98,7 +94,7 @@ def scrape_website_for_email(url):
     return ""
 
 # =========================
-# SERPAPI SCRAPER WITH PAGINATION
+# SERPAPI SCRAPER
 # =========================
 
 def scrape_with_serpapi(category, location):
@@ -120,6 +116,10 @@ def scrape_with_serpapi(category, location):
 
             for place in data.get("local_results", []):
                 name = place.get("title", "")
+
+                # remove cyber cafe confusion
+                if "cyber" in name.lower() and category == "coffee shop":
+                    continue
 
                 if name in seen:
                     continue
@@ -145,7 +145,7 @@ def scrape_with_serpapi(category, location):
     return results
 
 # =========================
-# MULTITHREADED EMAIL SCRAPER
+# EMAIL ENRICHMENT
 # =========================
 
 def enrich_emails(results):
@@ -160,21 +160,30 @@ def enrich_emails(results):
     return results
 
 # =========================
-# SAVE FUNCTIONS
+# XLSX SAVE
 # =========================
 
-def save_to_csv(category, location, data):
+def save_to_xlsx(category, location, data):
+    if not data:
+        return
+
     folder = os.path.join(OUTPUT_BASE_DIR, category)
     os.makedirs(folder, exist_ok=True)
 
     safe_location = location.replace(",", "").replace(" ", "_")
     filepath = os.path.join(folder, f"{safe_location}.xlsx")
 
-    with open(filepath, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=data[0].keys())
-        writer.writeheader()
-        writer.writerows(data)
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "data"
 
+    headers = list(data[0].keys())
+    ws.append(headers)
+
+    for row in data:
+        ws.append(list(row.values()))
+
+    wb.save(filepath)
     print("Saved:", filepath)
 
 # =========================
@@ -182,18 +191,23 @@ def save_to_csv(category, location, data):
 # =========================
 
 def main():
+    # regular categories
     for category in CATEGORIES:
         print(f"\nScraping {category} in {LOCATION}")
-
         results = scrape_with_serpapi(category, LOCATION)
 
-        if not results:
-            continue
+        if results:
+            results = enrich_emails(results)
+            save_to_xlsx(category, LOCATION, results)
 
-        print("Fetching emails...")
-        results = enrich_emails(results)
+    # hospitals separate folder
+    for category in HOSPITAL_CATEGORY:
+        print(f"\nScraping {category} in {LOCATION}")
+        results = scrape_with_serpapi(category, LOCATION)
 
-        save_to_csv(category, LOCATION, results)
+        if results:
+            results = enrich_emails(results)
+            save_to_xlsx("hospitals", LOCATION, results)
 
     print("\nAll done!")
 
