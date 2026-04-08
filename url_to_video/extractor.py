@@ -3,7 +3,8 @@ import os
 
 VIDEO_URL = "YOUR_PATH_HERE"
 
-DOWNLOAD_DIR = r"YOUR_DOWNLOAD_FOLDER_PATH_HERE" '''you can also place the folder in the same file structure'''
+DOWNLOAD_DIR = r"YOUR_DOWNLOAD_FOLDER_PATH_HERE" 
+# '''you can also place the folder in the same file structure'''
 
 FFMPEG_PATH = (
     r"YOUR_FFMPEG_PATH_HERE\ffmpeg-8.0.1-essentials_buil"
